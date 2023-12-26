@@ -1,8 +1,47 @@
 # minimum_circle_methods.py
-
+import math
+import random
 import time
+from minimum_circle_classes import Point, Circle, circle_through_three_points,contains
 
-from minimum_circle_classes import Point, Circle
+
+# Fonction du cercle minimum avec la méthode récursive Welzl
+def cercle_minimum_welzl(points):
+    global execution_time_welzl
+    start_time = time.time() * 1000
+    result = welzl_minimal_circle(points, [])
+    end_time = time.time() * 1000
+    execution_time_welzl = end_time - start_time
+    return result, execution_time_welzl
+
+def welzl_minimal_circle(P, R):
+    P1 = P.copy()
+    rand = random.Random()
+    d = Circle(Point(0, 0), 0)
+    if not P1 or len(R) == 3:
+        d = trivial_circle(R)
+    else:
+        pt = P1[rand.randint(0, len(P1) - 1)]
+        P1.remove(pt)
+        d = welzl_minimal_circle(P1, R)
+        if d is not None and not contains(d, pt):
+            R.append(pt)
+            d = welzl_minimal_circle(P1, R)
+            R.remove(pt)
+    return d
+
+def trivial_circle(r):
+        if len(r) == 0:
+            return Circle(Point(0, 0), 0)
+        elif len(r) == 1:
+            return Circle(r[0], 0)
+        elif len(r) == 2:
+            center_x = (r[0].x + r[1].x) / 2
+            center_y = (r[0].y + r[1].y) / 2
+            radius = math.sqrt((r[0].x - r[1].x)** 2 + (r[0].y - r[1].y)**2 ) / 2
+            return Circle(Point(center_x, center_y), radius)
+        else:
+            return circle_through_three_points(r[0], r[1], r[2])
 
 # Fonction du cercle minimum avec la méthode naive
 def cercle_minimum_naif(points):

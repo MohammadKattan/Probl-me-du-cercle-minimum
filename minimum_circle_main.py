@@ -2,7 +2,7 @@
 
 import matplotlib.pyplot as plt
 from minimum_circle_classes import Point
-from minimum_circle_methods  import cercle_minimum_naif
+from minimum_circle_methods  import cercle_minimum_welzl,cercle_minimum_naif
 
 execution_time_naive = None
 execution_time_welzl = None
@@ -62,15 +62,14 @@ def read_points_from_file(file_path):
 def lancer_execution():
     global execution_time_naive 
     global execution_time_welzl
-    for i in range(5, 6):  # Boucler sur les fichiers de corordonnées de points
+    for i in range(3, 4):  # Boucler sur les fichiers de corordonnées de points
         file_path = f'samples/test-{i}.points'
         points = read_points_from_file(file_path)
         naive_circle, execution_time_naive = cercle_minimum_naif(points)
-        #welzl_circle, execution_time_welzl = cercle_minimum_welzl(points)
-        # welzl_circle = welzl_minimal_circle_iteratif(points)
+        welzl_circle, execution_time_welzl = cercle_minimum_welzl(points)
         with open('fichiers_temps.txt', 'a') as fichier:
             fichier.write(f"{i}. {execution_time_naive} / {execution_time_welzl}\n")
-    plot_window(points,None,naive_circle)
+    plot_window(points,welzl_circle,naive_circle)
 
 def main():
     lancer_execution() #Dossier test .points du prof
